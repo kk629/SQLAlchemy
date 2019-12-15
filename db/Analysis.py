@@ -184,4 +184,38 @@ for row in result:
 
 
    def dispatch_order(order_id):
-      
+       order = session.query(DatbaseInitialization.Order).get(order_id)
+
+       try:
+           if not order:
+               raise ValueError("Invalid order id: {}.".format(order_id))
+       except ValueError as e:
+           print(e)
+           return
+
+       try:
+           if order.date_shipped:
+               print("Order already shipped.")
+               return
+       except:
+           pass
+
+       try:
+           for i in order.line_items:
+               i.item.quantity = i.item.quantity - i.quantity
+
+           order.date_shipped = datetime.now()
+           session.commit()
+           print("Transaction completed.")
+
+       except IntegrityError as e:
+           print(e)
+           print("Rolling back ...")
+           session.rollback()
+           print("Transaction failed.")
+
+print("Orders Status For Order ID 1:")
+dispatch_order(1)
+print("Orders Status For Order ID 2:")
+dispatch_order(2)
+
