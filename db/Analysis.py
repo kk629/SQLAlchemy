@@ -78,3 +78,72 @@ for row in result:
    print ("Name: ",row.first_name," ",row.last_name, " Address:",row.address, " Email:",row.email)
 
 print("")
+result = session.query(DatbaseInitialization.Order).filter(DatbaseInitialization.Order.date_placed == None).all()
+print("All Orders with Date Shipped as None")
+if(result != None):
+   for row in result:
+      print("ID: ", row.id, " Date Placed:", row.date_placed, " Customer Id:", row.customer_id)
+else: print("NO RESULT")
+
+result = session.query(DatbaseInitialization.Order).filter(DatbaseInitialization.Order.date_placed != None).all()
+print("All Orders with Date Shipped Not as None")
+if(result != None):
+   for row in result:
+      print("ID: ", row.id, " Date Placed:", row.date_placed, " Customer Id:", row.customer_id)
+else: print("NO RESULT")
+
+
+result = session.query(DatbaseInitialization.Customer).filter(DatbaseInitialization.Customer.first_name.in_(['Toby', 'Sarah'])).all()
+print("All Customers whose name start with Toby or Sarah:")
+for row in result:
+   print ("Name: ",row.first_name," ",row.last_name, " Address:",row.address, " Email:",row.email)
+
+result = session.query(DatbaseInitialization.Customer).filter(DatbaseInitialization.Customer.first_name.in_(['Toby', 'Sarah'])).all()
+print("All Customers whose name does not start with Toby or Sarah:")
+for row in result:
+   print ("Name: ",row.first_name," ",row.last_name, " Address:",row.address, " Email:",row.email)
+
+result =  session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.cost_price.between(10, 50)).all()
+print("All Items whose cost price is between 10 and 50:")
+for row in result:
+   print ("Name: ",row.name," Cost Price:",row.cost_price, " Selling Price:",row.selling_price, " Quantity:",row.quantity)
+
+result =  session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.cost_price.between(10, 50)).all()
+print("All Items whose cost price is not between 10 and 50:")
+for row in result:
+   print ("Name: ",row.name," Cost Price:",row.cost_price, " Selling Price:",row.selling_price, " Quantity:",row.quantity)
+
+result  = session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.name.like("%r")).all()
+print("All Items whose name ends with r:")
+for row in result:
+   print ("Name: ",row.name," Cost Price:",row.cost_price, " Selling Price:",row.selling_price, " Quantity:",row.quantity)
+
+result  = session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.name.like("w%")).all()
+print("All Items whose name starts with w:")
+for row in result:
+   print ("Name: ",row.name," Cost Price:",row.cost_price, " Selling Price:",row.selling_price, " Quantity:",row.quantity)
+
+result =  session.query(DatbaseInitialization.Customer).limit(2).all()
+print("Printing all customers but limiting to 2:")
+for row in result:
+   print ("Name: ",row.first_name," ",row.last_name, " Address:",row.address, " Email:",row.email)
+
+result =  session.query(DatbaseInitialization.Customer).limit(2).offset(2).all()
+print("Printing all customers but limiting to 2 and offsetting to 2:")
+for row in result:
+   print ("Name: ",row.first_name," ",row.last_name, " Address:",row.address, " Email:",row.email)
+
+result =  session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.name.like("wa%")).order_by(desc(DatbaseInitialization.Item.cost_price)).all()
+print("Printing all items that start with wa and then it is sorted by the cost price in descending order:")
+for row in result:
+   print ("Name: ",row.name," Cost Price:",row.cost_price, " Selling Price:",row.selling_price, " Quantity:",row.quantity)
+
+result =  session.query(DatbaseInitialization.Customer, DatbaseInitialization.Order.date_placed).join(DatbaseInitialization.Order).all()
+print("Join between Customer and Order:")
+for row in result:
+   print (" Order placed on:",row.date_placed)
+
+result =  session.query(DatbaseInitialization.Customer.first_name, DatbaseInitialization.Order.id).outerjoin(DatbaseInitialization.Order).all()
+print("Outer Join between Customer and Order:")
+for row in result:
+   print (" Order placed by:",row.first_name, " with Order ID:",row.id)
