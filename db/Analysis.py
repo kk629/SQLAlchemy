@@ -147,3 +147,41 @@ result =  session.query(DatbaseInitialization.Customer.first_name, DatbaseInitia
 print("Outer Join between Customer and Order:")
 for row in result:
    print (" Order placed by:",row.first_name, " with Order ID:",row.id)
+   result = session.query(func.count(DatbaseInitialization.Customer.id)).join(DatbaseInitialization.Order).filter(
+      DatbaseInitialization.Customer.first_name == 'John',
+      DatbaseInitialization.Customer.last_name == 'Green',
+   ).group_by(DatbaseInitialization.Customer.id).scalar()
+
+   result = session.query(DatbaseInitialization.Customer.town).filter(
+      DatbaseInitialization.Customer.id <= 10).distinct().all()
+
+   for row in result:
+      print(row.town)
+
+   s1 = session.query(DatbaseInitialization.Item.id, DatbaseInitialization.Item.name).filter(
+      DatbaseInitialization.Item.name.like("Wa%"))
+   s2 = session.query(DatbaseInitialization.Item.id, DatbaseInitialization.Item.name).filter(
+      DatbaseInitialization.Item.name.like("%e%"))
+   result = s1.union(s2).all()
+
+   for row in result:
+      print(row)
+
+   result = session.query(DatbaseInitialization.Item).filter(
+      DatbaseInitialization.Item.name.ilike("W%")
+   ).update({"quantity": 60}, synchronize_session='fetch')
+   session.commit()
+
+   result = session.query(DatbaseInitialization.Item).filter(DatbaseInitialization.Item.name == 'Monitor').one()
+   session.delete(result)
+   session.commit()
+
+   print(result.name)
+
+   result = session.query(DatbaseInitialization.Order).all()
+
+   print("Orders Status:")
+
+
+   def dispatch_order(order_id):
+      
